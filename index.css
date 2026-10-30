@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 #outterDiv {
   position: relative;
   display: inline-block;
