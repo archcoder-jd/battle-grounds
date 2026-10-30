@@ -1,3 +1,4 @@
+// canvas setup
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d')
 
@@ -6,19 +7,34 @@ canvas.height = 576
 
 c.fillRect(0, 0, canvas.width, canvas.height)
 
-const gravity = 0.2
+// player physics
+const gravity = 0.7
 
-class Sprite {
+class PlayerSprite {
     constructor({position, velocity}) {
         this.position = position
         this.velocity = velocity
         this.height = 150
         this.lastKey
+        this.weapon = {
+            position: this.position,
+            width: 100,
+            height: 50
+        }
     }
 
     draw() {
+        // character
         c.fillStyle = 'red'
         c.fillRect(this.position.x, this.position.y, 50, this.height)
+
+        // weapon
+        c.fillRect(
+            this.weapon.position.x,
+            this.weapon.position.y,
+            this.weapon.width,
+            this.weapon.height
+        )
     }
 
     update() {
@@ -33,7 +49,47 @@ class Sprite {
     }
 }
 
-const player = new Sprite({
+class EnemySprite {
+    constructor({position, velocity}) {
+        this.position = position
+        this.velocity = velocity
+        this.height = 150
+        this.lastKey
+        this.weapon = {
+            position: this.position,
+            width: -60,
+            height: 50
+        }
+    }
+
+    draw() {
+        // character
+        c.fillStyle = 'blue'
+        c.fillRect(this.position.x, this.position.y, 50, this.height)
+
+        // weapon
+        c.fillRect(
+            this.weapon.position.x,
+            this.weapon.position.y,
+            this.weapon.width,
+            this.weapon.height
+        )
+    }
+
+    update() {
+        this.draw()
+
+        this.position.x += this.velocity.x
+        this.position.y += this.velocity.y
+
+        if (this.position.y + this.height + this.velocity.y >= canvas.height) {
+            this.velocity.y = 0
+        } else this.velocity.y += gravity
+    }
+}
+
+// players
+const player = new PlayerSprite({
     position: {
         x: 0,
         y: 0
@@ -44,7 +100,7 @@ const player = new Sprite({
     }
 })
 
-const enemy = new Sprite({
+const enemy = new EnemySprite({
     position: {
         x: 800,
         y: 200
@@ -57,6 +113,7 @@ const enemy = new Sprite({
 
 console.log(player)
 
+// controls
 const keys = {
     a: {
         pressed: false
@@ -75,6 +132,7 @@ const keys = {
     }
 }
 
+// animation
 function animate() {
     window.requestAnimationFrame(animate)
     c.fillStyle = 'black'
@@ -101,6 +159,7 @@ function animate() {
 }
 animate()
 
+// eventListeners
 window.addEventListener('keydown', (event) => {
     console.log(event.key)
     switch (event.key) {
@@ -113,7 +172,7 @@ window.addEventListener('keydown', (event) => {
             player.lastKey = 'a'
             break
         case 'w':
-            player.velocity.y = -5
+            player.velocity.y = -20
             break
 
         case 'ArrowRight':
@@ -125,7 +184,7 @@ window.addEventListener('keydown', (event) => {
             enemy.lastKey = 'ArrowLeft'
             break
         case 'ArrowUp':
-            enemy.velocity.y = -10
+            enemy.velocity.y = -20
             break
     }
     console.log(event.key);
