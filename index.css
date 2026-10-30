@@ -25,14 +25,23 @@
   height: 100px;
 }
 
-#p1health {
-  background-color: yellow;
+#p1h {
+  position: relative;
   height: 30px;
   width: 100%;
 }
-
-#p2health {
+#p1SubHealth {
   background-color: yellow;
   height: 30px;
+}
+
+
+#p2h {
+  position: relative;
+  height: 30px;
   width: 100%;
+}
+#p2SubHealth {
+  background-color: yellow;
+  height: 30px;
 }

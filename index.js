@@ -211,7 +211,7 @@ function animate() {
     player.isAttacking
   ) {
     player.isAttacking = false;
-    console.log("player attacked");
+    document.querySelector('#p2health').style.width = '20%'
   }
 
   if (
