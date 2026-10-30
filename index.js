@@ -18,7 +18,10 @@ class PlayerSprite {
         this.height = 150
         this.lastKey
         this.weapon = {
-            position: this.position,
+            position: {
+                x: this.position.x,
+                y: this.position.y
+            },
             width: 100,
             height: 50
         }
@@ -32,17 +35,21 @@ class PlayerSprite {
         c.fillRect(this.position.x, this.position.y, this.width, this.height)
 
         // weapon
-        c.fillStyle = 'purple'
-        c.fillRect(
-            this.weapon.position.x,
-            this.weapon.position.y,
-            this.weapon.width,
-            this.weapon.height
-        )
+        if (this.isAttacking) {
+            c.fillStyle = 'purple'
+            c.fillRect(
+                this.weapon.position.x,
+                this.weapon.position.y,
+                this.weapon.width,
+                this.weapon.height
+            )
+        }
     }
 
     update() {
         this.draw()
+        this.weapon.position.x = this.position.x
+        this.weapon.position.y = this.position.y
 
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
@@ -68,7 +75,10 @@ class EnemySprite {
         this.height = 150
         this.lastKey
         this.weapon = {
-            position: this.position,
+            position: {
+                x: this.position.x,
+                y: this.position.y
+            },
             width: 100,
             height: 50
         }
@@ -82,17 +92,21 @@ class EnemySprite {
         c.fillRect(this.position.x, this.position.y, this.width, this.height)
 
         // weapon
-        c.fillStyle = 'purple'
-        c.fillRect(
-            this.weapon.position.x,
-            this.weapon.position.y,
-            this.weapon.width,
-            this.weapon.height
-        )
+        if (this.isAttacking) {
+            c.fillStyle = 'purple'
+            c.fillRect(
+                this.weapon.position.x,
+                this.weapon.position.y,
+                this.weapon.width,
+                this.weapon.height
+            )
+        }
     }
 
     update() {
         this.draw()
+        this.weapon.position.x = this.position.x -50
+        this.weapon.position.y = this.position.y
 
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
@@ -154,6 +168,18 @@ const keys = {
     }
 }
 
+function hitIntersect({hit1, hit2}) {
+    return (
+        hit1.weapon.position.x + hit1.weapon.width >=
+            hit2.position.x &&
+        hit1.weapon.position.x <=
+            hit2.position.x + hit2.width &&
+        hit1.weapon.position.y + hit1.weapon.height >=
+            hit2.position.y && 
+        hit1.weapon.position.y <= hit2.position.y + hit2.height
+    )
+}
+
 // animation
 function animate() {
     window.requestAnimationFrame(animate)
@@ -180,14 +206,26 @@ function animate() {
     }
 
     // detect intersect
-    if (player.weapon.position.x + player.weapon.width >= enemy.position.x &&
-        player.weapon.position.x <= enemy.position.x + enemy.width &&
-        player.weapon.position.y + player.weapon.height >= enemy.position.y && 
-        player.weapon.position.y <= enemy.position.y + enemy.height &&
+    if (
+        hitIntersect({
+            hit1: player,
+            hit2: enemy
+        }) &&
         player.isAttacking
     ) {
         player.isAttacking = false
-        console.log('boy')
+        console.log('player attacked')
+    }
+
+    if (
+        hitIntersect({
+            hit1: enemy,
+            hit2: player
+        }) &&
+        enemy.isAttacking
+    ) {
+        enemy.isAttacking = false
+        console.log('enemy attacked')
     }
 }
 animate()
@@ -221,6 +259,9 @@ window.addEventListener('keydown', (event) => {
             break
         case 'ArrowUp':
             enemy.velocity.y = -20
+            break
+        case 'ArrowDown':
+            enemy.isAttacking = true
             break
     }
     console.log(event.key);
