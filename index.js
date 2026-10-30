@@ -11,9 +11,10 @@ c.fillRect(0, 0, canvas.width, canvas.height)
 const gravity = 0.7
 
 class PlayerSprite {
-    constructor({position, velocity}) {
+    constructor({position, velocity, color = 'red'}) {
         this.position = position
         this.velocity = velocity
+        this.width = 50
         this.height = 150
         this.lastKey
         this.weapon = {
@@ -21,14 +22,16 @@ class PlayerSprite {
             width: 100,
             height: 50
         }
+        this.color = color
     }
 
     draw() {
         // character
-        c.fillStyle = 'red'
-        c.fillRect(this.position.x, this.position.y, 50, this.height)
+        c.fillStyle =  this.color
+        c.fillRect(this.position.x, this.position.y, this.width, this.height)
 
         // weapon
+        c.fillStyle = 'purple'
         c.fillRect(
             this.weapon.position.x,
             this.weapon.position.y,
@@ -50,24 +53,27 @@ class PlayerSprite {
 }
 
 class EnemySprite {
-    constructor({position, velocity}) {
+    constructor({position, velocity, color = 'blue'}) {
         this.position = position
         this.velocity = velocity
+        this.width = 50
         this.height = 150
         this.lastKey
         this.weapon = {
             position: this.position,
-            width: -60,
+            width: 100,
             height: 50
         }
+        this.color = color
     }
 
     draw() {
         // character
-        c.fillStyle = 'blue'
-        c.fillRect(this.position.x, this.position.y, 50, this.height)
+        c.fillStyle =  this.color
+        c.fillRect(this.position.x, this.position.y, this.width, this.height)
 
         // weapon
+        c.fillStyle = 'purple'
         c.fillRect(
             this.weapon.position.x,
             this.weapon.position.y,
@@ -155,6 +161,15 @@ function animate() {
         enemy.velocity.x = -2
     } else if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
         enemy.velocity.x = 2
+    }
+
+    // detect intersect
+    if (player.weapon.position.x + player.weapon.width >= enemy.position.x &&
+        player.weapon.position.x <= enemy.position.x + enemy.width &&
+        player.weapon.position.y + player.weapon.height >= enemy.position.y && 
+        player.weapon.position.y <= enemy.position.y + enemy.height
+    ) {
+        console.log('boy')
     }
 }
 animate()
