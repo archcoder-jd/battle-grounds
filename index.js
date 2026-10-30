@@ -23,6 +23,7 @@ class PlayerSprite {
             height: 50
         }
         this.color = color
+        this.isAttacking
     }
 
     draw() {
@@ -49,6 +50,13 @@ class PlayerSprite {
         if (this.position.y + this.height + this.velocity.y >= canvas.height) {
             this.velocity.y = 0
         } else this.velocity.y += gravity
+    }
+
+    attack() {
+        this.isAttacking = true
+        setTimeout(() => {
+            this.isAttacking = false
+        }, 100)
     }
 }
 
@@ -65,6 +73,7 @@ class EnemySprite {
             height: 50
         }
         this.color = color
+        this.isAttacking
     }
 
     draw() {
@@ -91,6 +100,13 @@ class EnemySprite {
         if (this.position.y + this.height + this.velocity.y >= canvas.height) {
             this.velocity.y = 0
         } else this.velocity.y += gravity
+    }
+
+    attack() {
+        this.isAttacking = true
+        setTimeout(() => {
+            this.isAttacking = false
+        }, 100)
     }
 }
 
@@ -167,8 +183,10 @@ function animate() {
     if (player.weapon.position.x + player.weapon.width >= enemy.position.x &&
         player.weapon.position.x <= enemy.position.x + enemy.width &&
         player.weapon.position.y + player.weapon.height >= enemy.position.y && 
-        player.weapon.position.y <= enemy.position.y + enemy.height
+        player.weapon.position.y <= enemy.position.y + enemy.height &&
+        player.isAttacking
     ) {
+        player.isAttacking = false
         console.log('boy')
     }
 }
@@ -188,6 +206,9 @@ window.addEventListener('keydown', (event) => {
             break
         case 'w':
             player.velocity.y = -20
+            break
+        case ' ':
+            player.attack()
             break
 
         case 'ArrowRight':
