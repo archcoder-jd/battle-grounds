@@ -1,6 +1,6 @@
 
 // background
-class Background {
+class Sprite {
   constructor({ position, imageSrc }) {
     this.position = position;
     this.width = 50;
