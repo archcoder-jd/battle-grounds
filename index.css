@@ -19,6 +19,9 @@
   flex-shrink: 0;
 }
 #timer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: red;
   flex-shrink: 0;
   width: 100px;
@@ -63,4 +66,16 @@
   bottom: 0;
   right: 0;
   left: 0;
+}
+
+#tie {
+  position: absolute;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  color: white;
 }

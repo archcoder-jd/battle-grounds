@@ -127,9 +127,9 @@ class EnemySprite {
 }
 
 // players
-const player = new PlayerSprite({
+const player1 = new PlayerSprite({
   position: {
-    x: 0,
+    x: 400,
     y: 0,
   },
   velocity: {
@@ -138,9 +138,9 @@ const player = new PlayerSprite({
   },
 });
 
-const enemy = new EnemySprite({
+const player2 = new EnemySprite({
   position: {
-    x: 800,
+    x: 600,
     y: 200,
   },
   velocity: {
@@ -149,7 +149,7 @@ const enemy = new EnemySprite({
   },
 });
 
-console.log(player);
+console.log(player1);
 
 // controls
 const keys = {
@@ -179,56 +179,90 @@ function hitIntersect({ hit1, hit2 }) {
   );
 }
 
+function determineWinner({player1, player2, timerId}) {
+  clearTimeout(timerId)
+  document.querySelector('#tie').style.display = 'flex'
+
+  if (player1.health === player2.health) {
+      document.querySelector('#tie').innerHTML = 'Tie'
+    } else if (player1.health > player2.health) {
+      document.querySelector('#tie').innerHTML = 'Player 1 Wins'
+    } else if (player2.health > player1.health) {
+      document.querySelector('#tie').innerHTML = 'Player 2 Wins'
+    }
+}
+
+let timer = 10
+let timerId
+function decreaseTimer() {
+  if (timer > 0) {
+    timerId = setTimeout(decreaseTimer, 1000)
+    timer--
+    document.querySelector('#timer').innerHTML = timer
+  }
+
+  if (timer === 0) {
+    determineWinner({player1, player2, timerId})
+  }
+}
+decreaseTimer()
+console.log(decreaseTimer)
+
 // animation
 function animate() {
   window.requestAnimationFrame(animate);
   c.fillStyle = "black";
   c.fillRect(0, 0, canvas.width, canvas.height);
-  player.update();
-  enemy.update();
+  player1.update();
+  player2.update();
 
-  player.velocity.x = 0;
-  enemy.velocity.x = 0;
+  player1.velocity.x = 0;
+  player2.velocity.x = 0;
 
-  // player
-  if (keys.a.pressed && player.lastKey === "a") {
-    player.velocity.x = -2;
-  } else if (keys.d.pressed && player.lastKey === "d") {
-    player.velocity.x = 2;
+  // player1
+  if (keys.a.pressed && player1.lastKey === "a") {
+    player1.velocity.x = -2;
+  } else if (keys.d.pressed && player1.lastKey === "d") {
+    player1.velocity.x = 2;
   }
 
-  // enemy
-  if (keys.ArrowLeft.pressed && enemy.lastKey === "ArrowLeft") {
-    enemy.velocity.x = -2;
-  } else if (keys.ArrowRight.pressed && enemy.lastKey === "ArrowRight") {
-    enemy.velocity.x = 2;
+  // player2
+  if (keys.ArrowLeft.pressed && player2.lastKey === "ArrowLeft") {
+    player2.velocity.x = -2;
+  } else if (keys.ArrowRight.pressed && player2.lastKey === "ArrowRight") {
+    player2.velocity.x = 2;
   }
 
   // detect intersect
   if (
     hitIntersect({
-      hit1: player,
-      hit2: enemy,
+      hit1: player1,
+      hit2: player2,
     }) &&
-    player.isAttacking
+    player1.isAttacking
   ) {
-    player.isAttacking = false;
-    enemy.health -= 20
-    document.querySelector('#p2hDecrease').style.width = enemy.health + '%'
-    console.log("player attacked");
+    player1.isAttacking = false;
+    player2.health -= 20
+    document.querySelector('#p2hDecrease').style.width = player2.health + '%'
+    console.log("player1 attacked");
   }
 
   if (
     hitIntersect({
-      hit1: enemy,
-      hit2: player,
+      hit1: player2,
+      hit2: player1,
     }) &&
-    enemy.isAttacking
+    player2.isAttacking
   ) {
-    enemy.isAttacking = false;
-    player.health -= 20
-    document.querySelector('#p1hDecrease').style.width = player.health + '%'
-    console.log("enemy attacked");
+    player2.isAttacking = false;
+    player1.health -= 20
+    document.querySelector('#p1hDecrease').style.width = player1.health + '%'
+    console.log("player2 attacked");
+  }
+
+  // determin winner
+  if (player2.health <= 0 || player1.health <= 0) {
+    determineWinner({player1, player2, timerId})
   }
 }
 animate();
@@ -239,32 +273,33 @@ window.addEventListener("keydown", (event) => {
   switch (event.key) {
     case "d":
       keys.d.pressed = true;
-      player.lastKey = "d";
+      player1.lastKey = "d";
       break;
     case "a":
       keys.a.pressed = true;
-      player.lastKey = "a";
+      player1.lastKey = "a";
       break;
     case "w":
-      player.velocity.y = -20;
+      player1.velocity.y = -20;
       break;
     case " ":
-      player.attack();
+      player1.attack();
       break;
 
+    // player2
     case "ArrowRight":
       keys.ArrowRight.pressed = true;
-      enemy.lastKey = "ArrowRight";
+      player2.lastKey = "ArrowRight";
       break;
     case "ArrowLeft":
       keys.ArrowLeft.pressed = true;
-      enemy.lastKey = "ArrowLeft";
+      player2.lastKey = "ArrowLeft";
       break;
     case "ArrowUp":
-      enemy.velocity.y = -20;
+      player2.velocity.y = -20;
       break;
     case "ArrowDown":
-      enemy.attack();
+      player2.attack();
       break;
   }
   // console.log(event.key);
@@ -283,7 +318,7 @@ window.addEventListener("keyup", (event) => {
       break;
   }
 
-  // enemy
+  // player2
   switch (event.key) {
     case "ArrowRight":
       keys.ArrowRight.pressed = false;
