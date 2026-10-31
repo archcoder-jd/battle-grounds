@@ -50,8 +50,23 @@ class Sprite {
 
 // fighters
 class Fighter1 extends Sprite {
-  constructor({ position, velocity, color = "red", imageSrc, scale = 1, framesMax = 1, offset = {x: 0, y: 0}, sprites }) {
-    super({ position, imageSrc, scale, framesMax, offset })
+  constructor({
+    position, velocity,
+    color = "red",
+    imageSrc,
+    scale = 1,
+    framesMax = 1,
+    offset = {x: 0, y: 0},
+    sprites,
+    weapon = { offset: {}, width: undefined, height: undefined }
+  }) {
+    super({
+      position,
+      imageSrc,
+      scale,
+      framesMax,
+      offset
+    })
 
     this.velocity = velocity;
     this.width = 50;
@@ -62,8 +77,9 @@ class Fighter1 extends Sprite {
         x: this.position.x,
         y: this.position.y,
       },
-      width: 100,
-      height: 50,
+      offset: weapon.offset,
+      width: weapon.width,
+      height: weapon.height,
     };
     this.color = color;
     this.isAttacking;
@@ -78,14 +94,22 @@ class Fighter1 extends Sprite {
       sprites[sprite].image.src = sprites[sprite].imageSrc
     }
 
-    console.log(this.sprites);
+    // console.log(this.sprites);
   }
 
   update() {
     this.draw();
     this.animateFrames();
-    this.weapon.position.x = this.position.x;
-    this.weapon.position.y = this.position.y;
+
+    // weapon
+    this.weapon.position.x = this.position.x + this.weapon.offset.x;
+    this.weapon.position.y = this.position.y + this.weapon.offset.y;
+    c.fillRect(
+      this.weapon.position.x,
+      this.weapon.position.y,
+      this.weapon.width,
+      this.weapon.height,
+    )
 
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
@@ -96,15 +120,12 @@ class Fighter1 extends Sprite {
       this.position.y = 381
     } else this.velocity.y += gravity;
 
-    console.log(this.position.y)
+    // console.log(this.position.y)
   }
 
   attack() {
     this.switchSprite('attack1')
     this.isAttacking = true;
-    setTimeout(() => {
-      this.isAttacking = false;
-    }, 100);
   }
 
   switchSprite(sprite) {
@@ -155,8 +176,23 @@ class Fighter1 extends Sprite {
 }
 
 class Fighter2 extends Sprite {
-  constructor({ position, velocity, color = "red", imageSrc, scale = 1, framesMax = 1, offset = {x: 0, y: 0}, sprites }) {
-    super({ position, imageSrc, scale, framesMax, offset })
+  constructor({
+    position, velocity,
+    color = "red",
+    imageSrc,
+    scale = 1,
+    framesMax = 1,
+    offset = {x: 0, y: 0},
+    sprites,
+    weapon = { offset: {}, width: undefined, height: undefined }
+  }) {
+    super({
+      position,
+      imageSrc,
+      scale,
+      framesMax,
+      offset
+    })
 
     this.velocity = velocity;
     this.width = 50;
@@ -167,8 +203,9 @@ class Fighter2 extends Sprite {
         x: this.position.x,
         y: this.position.y,
       },
-      width: 100,
-      height: 50,
+      offset: weapon.offset,
+      width: weapon.width,
+      height: weapon.height,
     };
     this.color = color;
     this.isAttacking;
@@ -183,14 +220,21 @@ class Fighter2 extends Sprite {
       sprites[sprite].image.src = sprites[sprite].imageSrc
     }
 
-    console.log(this.sprites);
+    // console.log(this.sprites);
   }
 
   update() {
     this.draw();
     this.animateFrames();
-    this.weapon.position.x = this.position.x - 50;
-    this.weapon.position.y = this.position.y;
+
+    this.weapon.position.x = this.position.x - 230 + this.weapon.offset.x;
+    this.weapon.position.y = this.position.y  + this.weapon.offset.y;
+    c.fillRect(
+      this.weapon.position.x,
+      this.weapon.position.y,
+      this.weapon.width,
+      this.weapon.height,
+    )
 
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
@@ -201,15 +245,12 @@ class Fighter2 extends Sprite {
       this.position.y = 381
     } else this.velocity.y += gravity;
 
-    console.log(this.position.y)
+    // console.log(this.position.y)
   }
 
   attack() {
     this.switchSprite('attack1')
     this.isAttacking = true;
-    setTimeout(() => {
-      this.isAttacking = false;
-    }, 100);
   }
 
   switchSprite(sprite) {

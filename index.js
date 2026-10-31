@@ -43,10 +43,10 @@ const player1 = new Fighter1({
   },
   imageSrc: './assets/characters/fighter1/Idle.png',
   framesMax: 11,
-  scale: 2,
+  scale: 1.8,
   offset: {
     x: 100,
-    y: 80
+    y: 53
   },
   sprites: {
     idle: {
@@ -66,9 +66,17 @@ const player1 = new Fighter1({
       framesMax: 3
     },
     attack1: {
-      imageSrc: './assets/characters/fighter1/Attack1.png',
+      imageSrc: './assets/characters/fighter1/Attack2.png',
       framesMax: 7
     }
+  },
+  weapon: {
+    offset: {
+      x: 10,
+      y: 37
+    },
+    width: 200,
+    height: 50
   }
 });
 
@@ -81,6 +89,43 @@ const player2 = new Fighter2({
     x: 0,
     y: 0,
   },
+  imageSrc: './assets/characters/fighter2/IdleFaceRight.png',
+  framesMax: 8,
+  scale: 2.1,
+  offset: {
+    x: -100,
+    y: 53
+  },
+  sprites: {
+    idle: {
+      imageSrc: './assets/characters/fighter2/IdleFaceRight.png',
+      framesMax: 8,
+    },
+    run: {
+      imageSrc: './assets/characters/fighter2/RunFaceRight.png',
+      framesMax: 8,
+    },
+    jump: {
+      imageSrc: './assets/characters/fighter2/JumpFaceRight.png',
+      framesMax: 2
+    },
+    fall: {
+      imageSrc: './assets/characters/fighter2/FallFaceRight.png',
+      framesMax: 2
+    },
+    attack1: {
+      imageSrc: './assets/characters/fighter2/Attack1FaceRight.png',
+      framesMax: 5
+    }
+  },
+  weapon: {
+    offset: {
+      x: 300,
+      y: 50
+    },
+    width: 180,
+    height: 50,
+  }
 });
 
 console.log(player1);
@@ -126,7 +171,7 @@ function determineWinner({player1, player2, timerId}) {
     }
 }
 
-let timer = 10
+let timer = 60
 let timerId
 function decreaseTimer() {
   if (timer > 0) {
@@ -177,18 +222,29 @@ function animate() {
 
   // player2 movement
   if (keys.ArrowLeft.pressed && player2.lastKey === "ArrowLeft") {
-    player2.velocity.x = -2;
+    player2.velocity.x = -6;
+    player2.switchSprite('run')
   } else if (keys.ArrowRight.pressed && player2.lastKey === "ArrowRight") {
-    player2.velocity.x = 2;
+    player2.velocity.x = 6;
+    player2.switchSprite('run')
+  } else {
+    player2.switchSprite('idle')
   }
 
-  // detect intersect
+  // jump/fall
+  if (player2.velocity.y <0) {
+    player2.switchSprite('jump')
+  } else if (player2.velocity.y > 0) {
+    player2.switchSprite('fall')
+  }
+
+  // detect intersect player1
   if (
     hitIntersect({
       hit1: player1,
       hit2: player2,
     }) &&
-    player1.isAttacking
+    player1.isAttacking && player1.framesCurrent === 3
   ) {
     player1.isAttacking = false;
     player2.health -= 20
@@ -196,17 +252,28 @@ function animate() {
     console.log("player1 attacked");
   }
 
+  // if player1 misses
+  if (player1.isAttacking && player1.framesCurrent === 3) {
+    player1.isAttacking = false
+  }
+
+  // detect intersect player2
   if (
     hitIntersect({
       hit1: player2,
       hit2: player1,
     }) &&
-    player2.isAttacking
+    player2.isAttacking && player2.framesCurrent === 1
   ) {
     player2.isAttacking = false;
     player1.health -= 20
     document.querySelector('#p1hDecrease').style.width = player1.health + '%'
     console.log("player2 attacked");
+  }
+
+  // if player2 misses
+  if (player2.isAttacking && player2.framesCurrent === 1) {
+    player2.isAttacking = false
   }
 
   // determin winner
