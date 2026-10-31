@@ -47,6 +47,16 @@ const player1 = new Fighter1({
   offset: {
     x: 100,
     y: 80
+  },
+  sprites: {
+    idle: {
+      imageSrc: './assets/characters/fighter1/Idle.png',
+      framesMax: 11
+    },
+    run: {
+      imageSrc: './assets/characters/fighter1/Run.png',
+      framesMax: 8
+    }
   }
 });
 
@@ -135,14 +145,17 @@ function animate() {
   player1.velocity.x = 0;
   player2.velocity.x = 0;
 
-  // player1
+  // player1 movement
+  player1.image = player1.sprites.idle.image
   if (keys.a.pressed && player1.lastKey === "a") {
-    player1.velocity.x = -2;
+    player1.velocity.x = -5;
+    player1.image = player1.sprites.run.image
   } else if (keys.d.pressed && player1.lastKey === "d") {
-    player1.velocity.x = 2;
+    player1.velocity.x = 5;
+    player1.image = player1.sprites.run.image
   }
 
-  // player2
+  // player2 movement
   if (keys.ArrowLeft.pressed && player2.lastKey === "ArrowLeft") {
     player2.velocity.x = -2;
   } else if (keys.ArrowRight.pressed && player2.lastKey === "ArrowRight") {
