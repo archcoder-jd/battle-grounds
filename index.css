@@ -25,23 +25,42 @@
   height: 100px;
 }
 
+#p1hContainer {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  height: 30px;
+  width: 100%;
+}
 #p1h {
+  background-color: white;
+  height: 30px;
+  width: 100%;
+}
+#p1hDecrease {
+  position: absolute;
+  background: navy;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+}
+
+
+#p2hContainer {
   position: relative;
   height: 30px;
   width: 100%;
 }
-#p1SubHealth {
-  background-color: yellow;
-  height: 30px;
-}
-
-
 #p2h {
-  position: relative;
+  background-color: white;
   height: 30px;
-  width: 100%;
 }
-#p2SubHealth {
-  background-color: yellow;
-  height: 30px;
+#p2hDecrease {
+  position: absolute;
+  background: navy;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
 }
