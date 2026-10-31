@@ -2,132 +2,26 @@
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
 
-canvas.width = 1024;
-canvas.height = 576;
+canvas.width = 928;
+canvas.height = 597;
 
 c.fillRect(0, 0, canvas.width, canvas.height);
 
-// player physics
+// players physics
 const gravity = 0.7;
 
-class PlayerSprite {
-  constructor({ position, velocity, color = "red" }) {
-    this.position = position;
-    this.velocity = velocity;
-    this.width = 50;
-    this.height = 150;
-    this.lastKey;
-    this.weapon = {
-      position: {
-        x: this.position.x,
-        y: this.position.y,
-      },
-      width: 100,
-      height: 50,
-    };
-    this.color = color;
-    this.isAttacking;
-    this.health = 100
-  }
+// background
+const background = new Sprite({
+  position: {
+    x: 0,
+    y: 0
+  },
+  imageSrc: './assets/background/background2.png'
+})
 
-  draw() {
-    // character
-    c.fillStyle = this.color;
-    c.fillRect(this.position.x, this.position.y, this.width, this.height);
-
-    // weapon
-    if (this.isAttacking) {
-      c.fillStyle = "purple";
-      c.fillRect(
-        this.weapon.position.x,
-        this.weapon.position.y,
-        this.weapon.width,
-        this.weapon.height,
-      );
-    }
-  }
-
-  update() {
-    this.draw();
-    this.weapon.position.x = this.position.x;
-    this.weapon.position.y = this.position.y;
-
-    this.position.x += this.velocity.x;
-    this.position.y += this.velocity.y;
-
-    if (this.position.y + this.height + this.velocity.y >= canvas.height) {
-      this.velocity.y = 0;
-    } else this.velocity.y += gravity;
-  }
-
-  attack() {
-    this.isAttacking = true;
-    setTimeout(() => {
-      this.isAttacking = false;
-    }, 100);
-  }
-}
-
-class EnemySprite {
-  constructor({ position, velocity, color = "blue" }) {
-    this.position = position;
-    this.velocity = velocity;
-    this.width = 50;
-    this.height = 150;
-    this.lastKey;
-    this.weapon = {
-      position: {
-        x: this.position.x,
-        y: this.position.y,
-      },
-      width: 100,
-      height: 50,
-    };
-    this.color = color;
-    this.isAttacking;
-    this.health = 100
-  }
-
-  draw() {
-    // character
-    c.fillStyle = this.color;
-    c.fillRect(this.position.x, this.position.y, this.width, this.height);
-
-    // weapon
-    if (this.isAttacking) {
-      c.fillStyle = "purple";
-      c.fillRect(
-        this.weapon.position.x,
-        this.weapon.position.y,
-        this.weapon.width,
-        this.weapon.height,
-      );
-    }
-  }
-
-  update() {
-    this.draw();
-    this.weapon.position.x = this.position.x - 50;
-    this.weapon.position.y = this.position.y;
-
-    this.position.x += this.velocity.x;
-    this.position.y += this.velocity.y;
-
-    if (this.position.y + this.height + this.velocity.y >= canvas.height) {
-      this.velocity.y = 0;
-    } else this.velocity.y += gravity;
-  }
-
-  attack() {
-    this.isAttacking = true;
-    setTimeout(() => {
-      this.isAttacking = false;
-    }, 100);
-  }
-}
 
 // players
-const player1 = new PlayerSprite({
+const player1 = new Fighter1({
   position: {
     x: 400,
     y: 0,
@@ -138,10 +32,10 @@ const player1 = new PlayerSprite({
   },
 });
 
-const player2 = new EnemySprite({
+const player2 = new Fighter2({
   position: {
     x: 600,
-    y: 200,
+    y: 0,
   },
   velocity: {
     x: 0,
@@ -170,49 +64,14 @@ const keys = {
   },
 };
 
-function hitIntersect({ hit1, hit2 }) {
-  return (
-    hit1.weapon.position.x + hit1.weapon.width >= hit2.position.x &&
-    hit1.weapon.position.x <= hit2.position.x + hit2.width &&
-    hit1.weapon.position.y + hit1.weapon.height >= hit2.position.y &&
-    hit1.weapon.position.y <= hit2.position.y + hit2.height
-  );
-}
-
-function determineWinner({player1, player2, timerId}) {
-  clearTimeout(timerId)
-  document.querySelector('#tie').style.display = 'flex'
-
-  if (player1.health === player2.health) {
-      document.querySelector('#tie').innerHTML = 'Tie'
-    } else if (player1.health > player2.health) {
-      document.querySelector('#tie').innerHTML = 'Player 1 Wins'
-    } else if (player2.health > player1.health) {
-      document.querySelector('#tie').innerHTML = 'Player 2 Wins'
-    }
-}
-
-let timer = 10
-let timerId
-function decreaseTimer() {
-  if (timer > 0) {
-    timerId = setTimeout(decreaseTimer, 1000)
-    timer--
-    document.querySelector('#timer').innerHTML = timer
-  }
-
-  if (timer === 0) {
-    determineWinner({player1, player2, timerId})
-  }
-}
-decreaseTimer()
-console.log(decreaseTimer)
-
 // animation
 function animate() {
   window.requestAnimationFrame(animate);
   c.fillStyle = "black";
   c.fillRect(0, 0, canvas.width, canvas.height);
+
+  background.update()
+
   player1.update();
   player2.update();
 
