@@ -220,17 +220,19 @@ animate();
 window.addEventListener("keydown", (event) => {
   // console.log(event.key)
   switch (event.key) {
-    case "d":
-      keys.d.pressed = true;
-      player1.lastKey = "d";
-      break;
+    // player1
     case "a":
       keys.a.pressed = true;
       player1.lastKey = "a";
       break;
+    case "d":
+      keys.d.pressed = true;
+      player1.lastKey = "d";
+      break;
     case "w":
       player1.velocity.y = -20;
       break;
+    // attack
     case " ":
       player1.attack();
       break;
@@ -247,6 +249,7 @@ window.addEventListener("keydown", (event) => {
     case "ArrowUp":
       player2.velocity.y = -20;
       break;
+    // attack
     case "ArrowDown":
       player2.attack();
       break;
@@ -256,11 +259,12 @@ window.addEventListener("keydown", (event) => {
 
 window.addEventListener("keyup", (event) => {
   switch (event.key) {
-    case "d":
-      keys.d.pressed = false;
-      break;
+    // player1
     case "a":
       keys.a.pressed = false;
+      break;
+    case "d":
+      keys.d.pressed = false;
       break;
     case "w":
       keys.w.pressed = false;
