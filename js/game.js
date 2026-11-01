@@ -201,6 +201,13 @@ function animate() {
   player1.velocity.x = 0;
   player2.velocity.x = 0;
 
+  // players always face each other (dead fighters keep the way they fell)
+  const player1OnRight =
+    player1.hurtbox.x + player1.hurtbox.width / 2 >
+    player2.hurtbox.x + player2.hurtbox.width / 2;
+  if (!player1.dead) player1.flipped = player1OnRight;
+  if (!player2.dead) player2.flipped = player1OnRight;
+
   // player1 movement
   if (keys.a.pressed && player1.lastKey === "a") {
     player1.velocity.x = -5;

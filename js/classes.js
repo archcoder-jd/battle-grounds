@@ -13,20 +13,37 @@ class Sprite {
     this.framesElapsed = 0;
     this.framesHold = 8;
     this.offset = offset;
+    this.flipped = false;
+  }
+
+  mirrorAxis() {
+    return this.hurtbox.offset.x + this.hurtbox.width / 2;
   }
 
   draw() {
+    const frameWidth = this.image.width / this.framesMax;
+    const drawX = this.position.x - this.offset.x;
+    const drawY = this.position.y - this.offset.y;
+
+    c.save();
+    if (this.flipped) {
+      const axis = drawX + this.mirrorAxis();
+      c.translate(axis * 2, 0);
+      c.scale(-1, 1);
+    }
+
     c.drawImage(
       this.image,
-      this.framesCurrent * (this.image.width / this.framesMax),
+      this.framesCurrent * frameWidth,
       0,
-      this.image.width / this.framesMax,
+      frameWidth,
       this.image.height,
-      this.position.x - this.offset.x,
-      this.position.y - this.offset.y,
-      (this.image.width / this.framesMax) * this.scale,
+      drawX,
+      drawY,
+      frameWidth * this.scale,
       this.image.height * this.scale
     )
+    c.restore();
   }
 
   animateFrames() {
@@ -52,7 +69,9 @@ class Sprite {
     const originY = this.position.y - this.offset.y;
     this.hurtbox.x = originX + this.hurtbox.offset.x;
     this.hurtbox.y = originY + this.hurtbox.offset.y;
-    this.weapon.position.x = originX + this.weapon.offset.x;
+    this.weapon.position.x = this.flipped
+      ? originX + this.mirrorAxis() * 2 - this.weapon.offset.x - this.weapon.width
+      : originX + this.weapon.offset.x;
     this.weapon.position.y = originY + this.weapon.offset.y;
   }
 }
