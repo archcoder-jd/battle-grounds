@@ -68,15 +68,23 @@ const player1 = new Fighter1({
     attack1: {
       imageSrc: './assets/characters/fighter1/Attack2.png',
       framesMax: 7
-    }
-  },
-  weapon: {
-    offset: {
-      x: 10,
-      y: 37
     },
-    width: 200,
+    takeHit: {
+      imageSrc: './assets/characters/fighter1/TakeHit.png',
+      framesMax: 4
+    },
+  },
+  // offsets are measured from the drawn sprite origin (position - offset)
+  weapon: {
+    offset: { x: 110, y: 90 },
+    width: 185,
     height: 50
+  },
+  // the box that the opponent's weapon can hit, matched to the drawn idle figure
+  hurtbox: {
+    offset: { x: 131, y: 113 },
+    width: 85,
+    height: 92
   }
 });
 
@@ -116,15 +124,21 @@ const player2 = new Fighter2({
     attack1: {
       imageSrc: './assets/characters/fighter2/Attack1FaceRight.png',
       framesMax: 5
-    }
+    },
+    takeHit: {
+      imageSrc: './assets/characters/fighter2/TakeHitFaceRight.png',
+      framesMax: 3
+    },
   },
   weapon: {
-    offset: {
-      x: 300,
-      y: 50
-    },
-    width: 180,
+    offset: { x: 40, y: 103 },
+    width: 80,
     height: 50,
+  },
+  hurtbox: {
+    offset: { x: 120, y: 116 },
+    width: 67,
+    height: 88
   }
 });
 
@@ -149,12 +163,15 @@ const keys = {
   },
 };
 
+// attacker's weapon box vs defender's hurtbox (both in canvas coordinates)
 function hitIntersect({ hit1, hit2 }) {
+  const w = hit1.weapon;
+  const body = hit2.hurtbox;
   return (
-    hit1.weapon.position.x + hit1.weapon.width >= hit2.position.x &&
-    hit1.weapon.position.x <= hit2.position.x + hit2.width &&
-    hit1.weapon.position.y + hit1.weapon.height >= hit2.position.y &&
-    hit1.weapon.position.y <= hit2.position.y + hit2.height
+    w.position.x + w.width >= body.x &&
+    w.position.x <= body.x + body.width &&
+    w.position.y + w.height >= body.y &&
+    w.position.y <= body.y + body.height
   );
 }
 
@@ -238,7 +255,7 @@ function animate() {
     player2.switchSprite('fall')
   }
 
-  // detect intersect player1
+  // detect intersect player1 & take hit
   if (
     hitIntersect({
       hit1: player1,
@@ -246,8 +263,8 @@ function animate() {
     }) &&
     player1.isAttacking && player1.framesCurrent === 3
   ) {
+    player2.takeHit()
     player1.isAttacking = false;
-    player2.health -= 20
     document.querySelector('#p2hDecrease').style.width = player2.health + '%'
     console.log("player1 attacked");
   }
@@ -265,8 +282,8 @@ function animate() {
     }) &&
     player2.isAttacking && player2.framesCurrent === 1
   ) {
+    player1.takeHit()
     player2.isAttacking = false;
-    player1.health -= 20
     document.querySelector('#p1hDecrease').style.width = player1.health + '%'
     console.log("player2 attacked");
   }

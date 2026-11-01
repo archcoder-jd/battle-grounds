@@ -45,6 +45,16 @@ class Sprite {
     this.draw();
     this.animateFrames();
   }
+
+  // hitboxes are measured from where the sprite is actually drawn
+  updateHitboxes() {
+    const originX = this.position.x - this.offset.x;
+    const originY = this.position.y - this.offset.y;
+    this.hurtbox.x = originX + this.hurtbox.offset.x;
+    this.hurtbox.y = originY + this.hurtbox.offset.y;
+    this.weapon.position.x = originX + this.weapon.offset.x;
+    this.weapon.position.y = originY + this.weapon.offset.y;
+  }
 }
 
 
@@ -58,7 +68,8 @@ class Fighter1 extends Sprite {
     framesMax = 1,
     offset = {x: 0, y: 0},
     sprites,
-    weapon = { offset: {}, width: undefined, height: undefined }
+    weapon = { offset: {}, width: undefined, height: undefined },
+    hurtbox = { offset: {}, width: 50, height: 150 },
   }) {
     super({
       position,
@@ -80,6 +91,13 @@ class Fighter1 extends Sprite {
       offset: weapon.offset,
       width: weapon.width,
       height: weapon.height,
+    };
+    this.hurtbox = {
+      x: 0,
+      y: 0,
+      offset: hurtbox.offset,
+      width: hurtbox.width,
+      height: hurtbox.height,
     };
     this.color = color;
     this.isAttacking;
@@ -102,14 +120,7 @@ class Fighter1 extends Sprite {
     this.animateFrames();
 
     // weapon
-    this.weapon.position.x = this.position.x + this.weapon.offset.x;
-    this.weapon.position.y = this.position.y + this.weapon.offset.y;
-    c.fillRect(
-      this.weapon.position.x,
-      this.weapon.position.y,
-      this.weapon.width,
-      this.weapon.height,
-    )
+    this.updateHitboxes();
 
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
@@ -128,10 +139,21 @@ class Fighter1 extends Sprite {
     this.isAttacking = true;
   }
 
+  takeHit() {
+    this.switchSprite('takeHit')
+    this.health -= 20
+  }
+
   switchSprite(sprite) {
     if (
       this.image === this.sprites.attack1.image &&
       this.framesCurrent < this.sprites.attack1.framesMax - 1
+    )
+      return
+
+    if (
+      this.image === this.sprites.takeHit.image &&
+      this.framesCurrent < this.sprites.takeHit.framesMax - 1
     )
       return
 
@@ -171,6 +193,13 @@ class Fighter1 extends Sprite {
           this.framesCurrent = 0
         }
         break;
+      case 'takeHit':
+        if (this.image != this.sprites.takeHit.image) {
+          this.image = this.sprites.takeHit.image
+          this.framesMax = this.sprites.takeHit.framesMax
+          this.framesCurrent = 0
+        }
+        break;
     }
   }
 }
@@ -184,7 +213,8 @@ class Fighter2 extends Sprite {
     framesMax = 1,
     offset = {x: 0, y: 0},
     sprites,
-    weapon = { offset: {}, width: undefined, height: undefined }
+    weapon = { offset: {}, width: undefined, height: undefined },
+    hurtbox = { offset: {}, width: 50, height: 150 }
   }) {
     super({
       position,
@@ -207,6 +237,13 @@ class Fighter2 extends Sprite {
       width: weapon.width,
       height: weapon.height,
     };
+    this.hurtbox = {
+      x: 0,
+      y: 0,
+      offset: hurtbox.offset,
+      width: hurtbox.width,
+      height: hurtbox.height,
+    };
     this.color = color;
     this.isAttacking;
     this.health = 100
@@ -227,15 +264,9 @@ class Fighter2 extends Sprite {
     this.draw();
     this.animateFrames();
 
-    this.weapon.position.x = this.position.x - 230 + this.weapon.offset.x;
-    this.weapon.position.y = this.position.y  + this.weapon.offset.y;
-    c.fillRect(
-      this.weapon.position.x,
-      this.weapon.position.y,
-      this.weapon.width,
-      this.weapon.height,
-    )
-
+    // weapon
+    this.updateHitboxes();
+    
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
 
@@ -253,10 +284,21 @@ class Fighter2 extends Sprite {
     this.isAttacking = true;
   }
 
+  takeHit() {
+    this.switchSprite('takeHit')
+    this.health -= 20
+  }
+
   switchSprite(sprite) {
     if (
       this.image === this.sprites.attack1.image &&
       this.framesCurrent < this.sprites.attack1.framesMax - 1
+    )
+      return
+
+    if (
+      this.image === this.sprites.takeHit.image &&
+      this.framesCurrent < this.sprites.takeHit.framesMax - 1
     )
       return
 
@@ -293,6 +335,13 @@ class Fighter2 extends Sprite {
         if (this.image != this.sprites.attack1.image) {
           this.image = this.sprites.attack1.image
           this.framesMax = this.sprites.attack1.framesMax
+          this.framesCurrent = 0
+        }
+        break;
+      case 'takeHit':
+        if (this.image != this.sprites.takeHit.image) {
+          this.image = this.sprites.takeHit.image
+          this.framesMax = this.sprites.takeHit.framesMax
           this.framesCurrent = 0
         }
         break;
