@@ -16,6 +16,8 @@ class Sprite {
     this.flipped = false;
   }
 
+  // x of player's body centre, measured from sprite origin
+  // (the sprite is mirrored around this line so the body doesn't jump when it turns)
   mirrorAxis() {
     return this.hurtbox.offset.x + this.hurtbox.width / 2;
   }
@@ -69,6 +71,7 @@ class Sprite {
     const originY = this.position.y - this.offset.y;
     this.hurtbox.x = originX + this.hurtbox.offset.x;
     this.hurtbox.y = originY + this.hurtbox.offset.y;
+    // when mirrored, the weapon box switches to the other side of the player
     this.weapon.position.x = this.flipped
       ? originX + this.mirrorAxis() * 2 - this.weapon.offset.x - this.weapon.width
       : originX + this.weapon.offset.x;
