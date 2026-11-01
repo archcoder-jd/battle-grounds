@@ -1,4 +1,7 @@
-// canvas setup
+
+/* -----------------------------------------------------------------------
+  CANVAS SETUP
+  ------------------------------------------------------------------------ */
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
 
@@ -31,7 +34,9 @@ const place = new Sprite({
 })
 
 
-// players
+/* -----------------------------------------------------------------------
+  PLAYERS
+  ------------------------------------------------------------------------ */
 const player1 = new Fighter1({
   position: {
     x: 0,
@@ -175,7 +180,10 @@ const keys = {
 decreaseTimer()
 console.log(decreaseTimer)
 
-// animation
+
+/* -----------------------------------------------------------------------
+  ANIMATION
+  ------------------------------------------------------------------------ */
 function animate() {
   window.requestAnimationFrame(animate);
   c.fillStyle = "black";
@@ -280,6 +288,10 @@ function animate() {
 }
 animate();
 
+
+/* -----------------------------------------------------------------------
+  EVENT-LISTENERS
+  ------------------------------------------------------------------------ */
 // eventListeners
 window.addEventListener("keydown", (event) => {
   // console.log(event.key)
