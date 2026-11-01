@@ -177,7 +177,7 @@ body {
   }
 }
 
-
+/* GAME SCREEN */
 * {
   box-sizing: border-box;
   font-family: "Monda", sans-serif;
@@ -280,3 +280,35 @@ body {
   left: 0;
   color: white;
 }
+
+/* menu buttons after a round ends */
+#endButtons {
+  position: absolute;
+  left: 50%;
+  top: 62%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 24px;
+  z-index: 2;
+}
+
+.end-btn {
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--shadow);
+  background: var(--accent-3);
+  border: none;
+  border-radius: 10px;
+  padding: 16px 28px;
+  cursor: pointer;
+}
+
+.end-btn:hover,
+.end-btn:focus-visible {
+  background: var(--accent-2);
+  outline: none;
+}
+
+.end-btn:active {
+  transform: translateY(4px);
+ }

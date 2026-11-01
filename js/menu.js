@@ -59,6 +59,10 @@
 
     // hook for game
     document.dispatchEvent(new CustomEvent('battlegrounds:start'));
+
+    setTimeout(() => {
+      window.location.href = 'game.html';
+    }, 400);
   }
 
   startButton.addEventListener('click', startGame);
