@@ -141,7 +141,7 @@ class Fighter1 extends Sprite {
   }
 
   takeHit() {
-    this.health -= 20
+    this.health -= 8
 
     if (this.health <= 0) {
       this.switchSprite('death')
@@ -303,7 +303,7 @@ class Fighter2 extends Sprite {
   }
 
   takeHit() {
-    this.health -= 20
+    this.health -= 8
 
     if (this.health <= 0) {
       this.switchSprite('death')

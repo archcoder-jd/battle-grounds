@@ -171,44 +171,7 @@ const keys = {
   },
 };
 
-// attacker's weapon box vs defender's hurtbox (both in canvas coordinates)
-function hitIntersect({ hit1, hit2 }) {
-  const w = hit1.weapon;
-  const body = hit2.hurtbox;
-  return (
-    w.position.x + w.width >= body.x &&
-    w.position.x <= body.x + body.width &&
-    w.position.y + w.height >= body.y &&
-    w.position.y <= body.y + body.height
-  );
-}
 
-function determineWinner({player1, player2, timerId}) {
-  clearTimeout(timerId)
-  document.querySelector('#tie').style.display = 'flex'
-
-  if (player1.health === player2.health) {
-      document.querySelector('#tie').innerHTML = 'Tie'
-    } else if (player1.health > player2.health) {
-      document.querySelector('#tie').innerHTML = 'Player 1 Wins'
-    } else if (player2.health > player1.health) {
-      document.querySelector('#tie').innerHTML = 'Player 2 Wins'
-    }
-}
-
-let timer = 60
-let timerId
-function decreaseTimer() {
-  if (timer > 0) {
-    timerId = setTimeout(decreaseTimer, 1000)
-    timer--
-    document.querySelector('#timer').innerHTML = timer
-  }
-
-  if (timer === 0) {
-    determineWinner({player1, player2, timerId})
-  }
-}
 decreaseTimer()
 console.log(decreaseTimer)
 
@@ -220,6 +183,9 @@ function animate() {
 
   background.update()
   // place.update()
+  c.fillStyle = 'rgba(255, 255, 255, 0.07)'
+  c.fillRect(0, 0, canvas.width, canvas.height)
+
 
   player1.update();
   player2.update();
@@ -273,7 +239,10 @@ function animate() {
   ) {
     player2.takeHit()
     player1.isAttacking = false;
-    document.querySelector('#p2hDecrease').style.width = player2.health + '%'
+    // document.querySelector('#p2hDecrease').style.width = player2.health + '%'
+    gsap.to('#p2hDecrease', {
+      width: player2.health + '%'
+    })
     console.log("player1 attacked");
   }
 
@@ -292,7 +261,10 @@ function animate() {
   ) {
     player1.takeHit()
     player2.isAttacking = false;
-    document.querySelector('#p1hDecrease').style.width = player1.health + '%'
+    // document.querySelector('#p1hDecrease').style.width = player1.health + '%'
+    gsap.to('#p1hDecrease', {
+      width: player1.health + '%'
+    })
     console.log("player2 attacked");
   }
 
