@@ -73,6 +73,10 @@ const player1 = new Fighter1({
       imageSrc: './assets/characters/fighter1/TakeHit.png',
       framesMax: 4
     },
+    death: {
+      imageSrc: './assets/characters/fighter1/Death.png',
+      framesMax: 11
+    },
   },
   // offsets are measured from the drawn sprite origin (position - offset)
   weapon: {
@@ -128,6 +132,10 @@ const player2 = new Fighter2({
     takeHit: {
       imageSrc: './assets/characters/fighter2/TakeHitFaceRight.png',
       framesMax: 3
+    },
+    death: {
+      imageSrc: './assets/characters/fighter2/Death.png',
+      framesMax: 8
     },
   },
   weapon: {
@@ -303,24 +311,29 @@ animate();
 // eventListeners
 window.addEventListener("keydown", (event) => {
   // console.log(event.key)
-  switch (event.key) {
-    // player1
-    case "a":
-      keys.a.pressed = true;
-      player1.lastKey = "a";
-      break;
-    case "d":
-      keys.d.pressed = true;
-      player1.lastKey = "d";
-      break;
-    case "w":
-      player1.velocity.y = -20;
-      break;
-    // attack
-    case " ":
-      player1.attack();
-      break;
+  if (!player1.dead) {
+    switch (event.key) {
+      // player1
+      case "a":
+        keys.a.pressed = true;
+        player1.lastKey = "a";
+        break;
+      case "d":
+        keys.d.pressed = true;
+        player1.lastKey = "d";
+        break;
+      case "w":
+        player1.velocity.y = -20;
+        break;
+      // attack
+      case " ":
+        player1.attack();
+        break;
+    }
+  }
 
+  if (!player2.dead) {
+    switch (event.key) {
     // player2
     case "ArrowRight":
       keys.ArrowRight.pressed = true;
@@ -337,6 +350,7 @@ window.addEventListener("keydown", (event) => {
     case "ArrowDown":
       player2.attack();
       break;
+    }
   }
   // console.log(event.key);
 });

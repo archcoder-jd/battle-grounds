@@ -106,6 +106,7 @@ class Fighter1 extends Sprite {
     this.framesElapsed = 0;
     this.framesHold = 3;
     this.sprites = sprites;
+    this.dead = false;
 
     for (const sprite in this.sprites) {
       sprites[sprite].image = new Image()
@@ -117,7 +118,7 @@ class Fighter1 extends Sprite {
 
   update() {
     this.draw();
-    this.animateFrames();
+    if (!this.dead) this.animateFrames();
 
     // weapon
     this.updateHitboxes();
@@ -140,11 +141,20 @@ class Fighter1 extends Sprite {
   }
 
   takeHit() {
-    this.switchSprite('takeHit')
     this.health -= 20
+
+    if (this.health <= 0) {
+      this.switchSprite('death')
+    } else this.switchSprite('takeHit')
   }
 
   switchSprite(sprite) {
+    if (this.image === this.sprites.death.image) {
+      if (this.framesCurrent === this.sprites.death.framesMax - 1)
+        this.dead = true
+      return
+    }
+
     if (
       this.image === this.sprites.attack1.image &&
       this.framesCurrent < this.sprites.attack1.framesMax - 1
@@ -197,6 +207,13 @@ class Fighter1 extends Sprite {
         if (this.image != this.sprites.takeHit.image) {
           this.image = this.sprites.takeHit.image
           this.framesMax = this.sprites.takeHit.framesMax
+          this.framesCurrent = 0
+        }
+        break;
+      case 'death':
+        if (this.image != this.sprites.death.image) {
+          this.image = this.sprites.death.image
+          this.framesMax = this.sprites.death.framesMax
           this.framesCurrent = 0
         }
         break;
@@ -251,6 +268,7 @@ class Fighter2 extends Sprite {
     this.framesElapsed = 0;
     this.framesHold = 3;
     this.sprites = sprites;
+    this.dead = false;
 
     for (const sprite in this.sprites) {
       sprites[sprite].image = new Image()
@@ -262,7 +280,7 @@ class Fighter2 extends Sprite {
 
   update() {
     this.draw();
-    this.animateFrames();
+    if (!this.dead) this.animateFrames();
 
     // weapon
     this.updateHitboxes();
@@ -285,11 +303,20 @@ class Fighter2 extends Sprite {
   }
 
   takeHit() {
-    this.switchSprite('takeHit')
     this.health -= 20
+
+    if (this.health <= 0) {
+      this.switchSprite('death')
+    } else this.switchSprite('takeHit')
   }
 
   switchSprite(sprite) {
+    if (this.image === this.sprites.death.image) {
+      if (this.framesCurrent === this.sprites.death.framesMax - 1)
+        this.dead = true
+      return
+    }
+
     if (
       this.image === this.sprites.attack1.image &&
       this.framesCurrent < this.sprites.attack1.framesMax - 1
@@ -342,6 +369,13 @@ class Fighter2 extends Sprite {
         if (this.image != this.sprites.takeHit.image) {
           this.image = this.sprites.takeHit.image
           this.framesMax = this.sprites.takeHit.framesMax
+          this.framesCurrent = 0
+        }
+        break;
+      case 'death':
+        if (this.image != this.sprites.death.image) {
+          this.image = this.sprites.death.image
+          this.framesMax = this.sprites.death.framesMax
           this.framesCurrent = 0
         }
         break;
