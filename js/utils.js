@@ -16,6 +16,19 @@ function hitIntersect({ hit1, hit2 }) {
 
 
 /* -----------------------------------------------------------------------
+  BOUNDARIES
+  ------------------------------------------------------------------------ */
+function bodyBox(fighter) {
+  const left = fighter.position.x - fighter.offset.x + fighter.hurtbox.offset.x;
+  const top = fighter.position.y - fighter.offset.y + fighter.hurtbox.offset.y;
+  return {
+    left, right: left + fighter.hurtbox.width,
+    top, bottom: top + fighter.hurtbox.height,
+  };
+}
+
+
+/* -----------------------------------------------------------------------
   GAME END
   ------------------------------------------------------------------------ */
 let gameOver = false
