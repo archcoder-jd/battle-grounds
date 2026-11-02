@@ -34,9 +34,37 @@ function keepOnScreen(fighter) {
   else if (body.right > canvas.width) fighter.position.x -= body.right - canvas.width;
 }
 
+// prevent overlapping of fighters
+function separateFighters(a, b) {
+  const boxA = bodyBox(a);
+  const boxB = bodyBox(b);
+
+  const overlapX = Math.min(boxA.right, boxB.right) - Math.max(boxA.left, boxB.left);
+  const overlapY = Math.min(boxA.bottom, boxB.bottom) - Math.max(boxA.top, boxB.top);
+  if (overlapX <= 0 || overlapY <= 0) return;
+
+  const aIsLeft = boxA.left + boxA.right <= boxB.left + boxB.right;
+  const [left, right] = aIsLeft ? [a, b] : [b, a];
+  const leftBox = aIsLeft ? boxA : boxB;
+  const rightBox = aIsLeft ? boxB : boxA;
+
+  // share push
+  let pushLeft = overlapX /2;
+  let pushRight = overlapX /2;
+  const roomLeft = leftBox.left;
+  const roomRight = canvas.width - rightBox.right;
+  
+  if (pushLeft > roomLeft) { pushRight += pushLeft - roomLeft; pushLeft = roomLeft; }
+  if (pushRight > roomRight) { pushLeft += pushRight - roomRight; pushRight = roomRight; }
+
+  left.position.x -= pushLeft;
+  right.position.x += pushRight;
+}
+
 function applyBoundaries(a, b) {
   keepOnScreen(a);
   keepOnScreen(b);
+  separateFighters(a, b);
   // refresh hit/hurt boxes so facing & hit detection use corrected positions
   a.updateHitboxes();
   b.updateHitboxes();
