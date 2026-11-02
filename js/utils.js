@@ -34,6 +34,14 @@ function keepOnScreen(fighter) {
   else if (body.right > canvas.width) fighter.position.x -= body.right - canvas.width;
 }
 
+function applyBoundaries(a, b) {
+  keepOnScreen(a);
+  keepOnScreen(b);
+  // refresh hit/hurt boxes so facing & hit detection use corrected positions
+  a.updateHitboxes();
+  b.updateHitboxes();
+}
+
 
 /* -----------------------------------------------------------------------
   GAME END

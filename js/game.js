@@ -198,6 +198,8 @@ function animate() {
   player1.update();
   player2.update();
 
+  applyBoundaries(player1, player2);
+
   player1.velocity.x = 0;
   player2.velocity.x = 0;
 
