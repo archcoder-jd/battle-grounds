@@ -27,6 +27,13 @@ function bodyBox(fighter) {
   };
 }
 
+// keep fighter's body inside canvas
+function keepOnScreen(fighter) {
+  const body = bodyBox(fighter);
+  if (body.left < 0) fighter.position.x -= body.left;
+  else if (body.right > canvas.width) fighter.position.x -= body.right - canvas.width;
+}
+
 
 /* -----------------------------------------------------------------------
   GAME END
